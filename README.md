@@ -3,22 +3,12 @@
 
 The main interface of the application is designed to be easy to use and responsive, providing maximum user experience.
 
-<p align="center">
-  <img src="https://github.com/hokagelegend9999/alpha/assets/158546743/ee0b4e39-3384-4cb9-bf74-ba72b89a2a43" alt="Tampilan Menu" width="600"/>
-</p>
 
 ---
 
 ## 💾 BACKUP DATA VPS
 
 Fitur backup data VPS memungkinkan Anda menyimpan konfigurasi penting dengan mudah dan aman, cukup satu klik!
-
-<p align="center">
-  <img src="https://github.com/hokagelegend9999/alpha/blob/main/1.png?raw=true" alt="Backup Data VPS" width="400"/>
- <img src="https://github.com/hokagelegend9999/alpha/blob/main/2.png?raw=true" alt="Backup Data VPS" width="400"/>
- <img src="https://github.com/hokagelegend9999/alpha.v2/blob/main/Screenshot%202025-04-23%20153225.png?raw=true alt="Backup Data VPS" width="400"/>
-</p>
-
 
 
 ### INSTALL SCRIPT 

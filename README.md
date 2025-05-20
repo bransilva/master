@@ -49,28 +49,26 @@ If Service Status Still Off
 Please Reboot your VPS
 ```
 
+### INSTALL BOT TELEGRAM
+- Step 1: 
+Creating a Bot on Telegram
+Open Telegram and Search for BotFather:
 
-- Langkah 1: 
-Membuat Bot di Telegram
-Buka Telegram dan Cari BotFather:
+Search for BotFather on Telegram by typing "BotFather" in the search field.
+Select BotFather (the official account with a blue check mark).
+Creating a New Bot:
 
-Cari BotFather di Telegram dengan mengetikkan "BotFather" di kolom pencarian.
-Pilih BotFather (akun resmi dengan tanda centang biru).
-Membuat Bot Baru:
-![Screenshot 2024-06-04 115130](https://github.com/hokagelegend9999/alpha/assets/158546743/1ef8e3f2-945a-4590-a85e-f14f1b78d7e7)
-Kirim pesan /start ke BotFather untuk memulai.
-Kirim pesan /newbot untuk membuat bot baru.
-Ikuti instruksi untuk memberikan nama dan username untuk bot Anda.
-Setelah selesai, BotFather akan memberikan token API bot. Simpan token ini karena akan digunakan dalam skrip Anda.
+Send a message /start to BotFather to get started.
+Send a message /newbot to create a new bot.
+Follow the instructions to provide a name and username for your bot.
+Once completed, BotFather will provide a bot API token. Save this token because it will be used in your script.
 
-
-- Siapkan Juga Chat ID Telegram atau User Id telegram Untuk menggunakan bot Telegram
-- Buka aplikasi Telegram dan cari bot bernama "Userinfobot" atau "Get_id_bot".
+- Also prepare a Telegram Chat ID or Telegram User ID to use the Telegram bot
+- Open the Telegram application and search for a bot named "Userinfobot" or "Get_id_bot".
 - 
-  ![Screenshot 2024-06-05 082241](https://github.com/hokagelegend9999/alpha/assets/158546743/e97b1869-a38a-4899-a5fb-3a6b331b3558)
 
-Klik "Start" untuk memulai bot.
-Bot akan secara otomatis mengirimkan pesan berisi chat ID kamu.
+Click "Start" to start the bot.
+The bot will automatically send a message containing your chat ID.
 
 
 

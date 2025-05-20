@@ -13,8 +13,7 @@ Fitur backup data VPS memungkinkan Anda menyimpan konfigurasi penting dengan mud
 
 ### BEFORE INSTALL
 ➽ Debian 10 & 11 (recommended)   
-
-### UBUNTU & DEBIAN INSTALASI :     
+  
 
 1.  :    
 <pre><code>apt-get update && apt-get upgrade -y && apt dist-upgrade -y && update-grub</code></pre>
@@ -23,7 +22,7 @@ Fitur backup data VPS memungkinkan Anda menyimpan konfigurasi penting dengan mud
 <pre><code>apt install curl jq wget screen build-essential -y && reboot</code></pre>
 
 
-### INSTALL SCRIPT 
+### UBUNTU & DEBIAN INSTALL SCRIPT 
 ```
 apt install -y && apt update -y && apt upgrade -y && wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/premi.sh && chmod +x premi.sh && ./premi.sh
 ```

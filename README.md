@@ -1,7 +1,7 @@
 
 ## 🚀 TAMPILAN MENU
 
-Tampilan utama dari aplikasi ini dirancang agar mudah digunakan dan responsif, memberikan pengalaman pengguna yang maksimal.
+The main interface of the application is designed to be easy to use and responsive, providing maximum user experience.
 
 <p align="center">
   <img src="https://github.com/hokagelegend9999/alpha/assets/158546743/ee0b4e39-3384-4cb9-bf74-ba72b89a2a43" alt="Tampilan Menu" width="600"/>
@@ -23,12 +23,12 @@ Fitur backup data VPS memungkinkan Anda menyimpan konfigurasi penting dengan mud
 
 ### INSTALL SCRIPT 
 ```
-apt install -y && apt update -y && apt upgrade -y && wget -q https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/premi.sh && chmod +x premi.sh && ./premi.sh
+apt install -y && apt update -y && apt upgrade -y && wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/premi.sh && chmod +x premi.sh && ./premi.sh
 ```
 
 ## UPDATE SCRIPT
 ```
-wget -q https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/update.sh && chmod +x update.sh && ./update.sh
+wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/update.sh && chmod +x update.sh && ./update.sh
 ```
 
 ### SUPPORT OS LINUX
@@ -53,10 +53,10 @@ wget -q https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/m
 ```
 ### `WARNING !`
 ```
-Jika Mendapatkan Status Service Off
-Silahkan Restart Service.
-Jika Statsus Service Masih Off
-Silahkan Reboot vps kalian
+If You Get Service Off Status
+Please Restart Service.
+If Service Status Still Off
+Please Reboot your VPS
 ```
 
 
@@ -85,33 +85,23 @@ Bot akan secara otomatis mengirimkan pesan berisi chat ID kamu.
 
 
 
-### mendapatkan akses root ke vps mu
+### get root access to your vps
 
 ``````
 
-  wget -qO- -O aksesroot.sh https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/aksesroot.sh && bash aksesroot.sh
+  wget -qO- -O aksesroot.sh https://raw.githubusercontent.com/bransilva/master/refs/heads/main/aksesroot.sh && bash aksesroot.sh
 
 ```````
 
 
-#### install debian 11
 
-````
-apt update -y && apt install wget -y
-wget https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/premi_fixed_debian11.sh
-chmod +x premi_fixed_debian11.sh
-./premi_fixed_debian11.sh
+
+#### REINSTALL VPS UBUNTU DEBIAN
 
 ```
-
-
-
-#### INSTALL ULANG VPS UBUNTU DEBIAN
-
-```
-curl -O https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/reinstall.sh
+curl -O https://raw.githubusercontent.com/bransilva/master/refs/heads/main/reinstall.sh
 chmod +x reinstall.sh
-bash reinstall.sh debian 11 --password PASSWORD_KAMU
+bash reinstall.sh debian 11 --password YOUR_PASSWORD
 
 ```
 INSTALL HAPROXY DEBIAN 11

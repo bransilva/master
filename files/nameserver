@@ -1,5 +1,5 @@
 #!/bin/sh
-REPOS="https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/"
+REPOS="https://raw.githubusercontent.com/bransilva/master/refs/heads/main/"
 ns_domain_cloudflare() {
 	DOMAIN="profesorhokage.my.id"
 	DOMAIN_PATH=$(cat /etc/xray/domain)

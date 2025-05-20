@@ -14,7 +14,7 @@ Fitur backup data VPS memungkinkan Anda menyimpan konfigurasi penting dengan mud
 ### BEFORE INSTALL
 ➽ Debian 10 & 11 (recommended)   
 
-### INSTALASI :     
+### UBUNTU & DEBIAN INSTALASI :     
 
 1.  :    
 <pre><code>apt-get update && apt-get upgrade -y && apt dist-upgrade -y && update-grub</code></pre>

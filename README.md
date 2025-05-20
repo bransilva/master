@@ -106,6 +106,7 @@ bash reinstall.sh debian 11 --password YOUR_PASSWORD
 
 INSTALL HAPROXY DEBIAN 11
 
+```
 sudo apt install -t bullseye-backports haproxy
 
 sed -i "s#xxx#https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/#g" /etc/haproxy/haproxy.cfg
@@ -113,3 +114,4 @@ sed -i "s#xxx#https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/h
 sudo systemctl restart haproxy
 
 sudo systemctl status haproxy
+```

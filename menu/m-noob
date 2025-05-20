@@ -39,7 +39,7 @@ function garis() {
 echo -e "${CY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 }
 
-url_izin="https://raw.githubusercontent.com/hokagelegend9999/ijin/refs/heads/main/alpha"
+url_izin="https://raw.githubusercontent.com/bransilva/lucki756.v/refs/heads/main/permission"
 ipsaya=$(curl -sS ipv4.icanhazip.com)
 data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 date_list=$(date +"%Y-%m-%d" -d "$data_server")
@@ -56,7 +56,7 @@ echo -e "            \033[0;35mPERMISSION DENIED !${exitsc}"
 echo -e "   ${j}Your VPS${exitsc} $ipsaya ${j}Has been Banned${exitsc}"
 echo -e "     ${j}Buy access permissions for scripts${exitsc}"
 echo -e "             ${j}Contact Admin :${exitsc}"
-echo -e "      \033[0;36mWhatsapp${exitsc} https://t.me/hokagelegend1"
+echo -e "      \033[0;36mWhatsapp${exitsc} SCRIPT BY LUCKI NS"
 lane
 exit
 fi

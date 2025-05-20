@@ -9,7 +9,7 @@ y="\033[0;33m"
 NC="\033[0m"
 
 # // Izin IP
-url_izin="https://raw.githubusercontent.com/hokagelegend9999/ijin/refs/heads/main/alpha"
+url_izin="https://raw.githubusercontent.com/bransilva/lucki756.v/refs/heads/main/permission"
 ipsaya=$(curl -sS ipv4.icanhazip.com)
 data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 date_list=$(date +"%Y-%m-%d" -d "$data_server")
@@ -26,7 +26,7 @@ checking_sc() {
     echo -e "   \033[0;33mYour VPS${NC} $ipsaya \033[0;33mHas been Banned${NC}"
     echo -e "     \033[0;33mBuy access permissions for scripts${NC}"
     echo -e "             \033[0;33mContact Admin :${NC}"
-    echo -e "      \033[0;36mTelegram${NC} https://t.me/hokagelegend1"
+    echo -e "      \033[0;36mTelegram${NC} @Yeick_756"
     echo -e "\033[1;93m────────────────────────────────────────────\033[0m"
     exit
   fi
@@ -42,7 +42,7 @@ sleep 1
 echo -e ""
 garis 
 echo -e "${ungu}      Terimakasih sudah menggunakan-"
-echo -e "        Script premium by Rosi Center"
+echo -e "        SCRIPT BY LUCKI NS"
 garis
 echo -e ""
 exit 0
@@ -52,7 +52,7 @@ function LOGO() {
 clear
 echo -e ""
 garis
-echo -e "${ungu}            Rosi Store TUNNELING            "
+echo -e "${ungu}           SCRIPT BY LUCKI NS TUNNELING            "
 garis
 echo -e ""
 }

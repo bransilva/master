@@ -28,18 +28,18 @@ fun_bar() {
 }
 res1() {
 
-    wget -qO- fv-tunnel "https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/config/fv-tunnel" 
+    wget -qO- fv-tunnel "https://raw.githubusercontent.com/bransilva/master/refs/heads/main/config/fv-tunnel" 
     chmod +x fv-tunnel 
     bash fv-tunnel
     rm -rf fv-tunnel
     sudo rm -rf /usr/local/sbin/*
-    wget https://github.com/hokagelegend9999/alpha.v2/raw/refs/heads/main/menu/menu.zip
+    wget https://github.com/bransilva/master/raw/refs/heads/main/menu/menu.zip
     unzip menu.zip
     chmod +x menu/*
     mv menu/* /usr/local/sbin
     rm -rf menu
     rm -rf menu.zip
-    wget -O menu https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/menu/menu
+    wget -O menu https://raw.githubusercontent.com/bransilva/master/refs/heads/main/menu/menu
     sudo mv menu /usr/local/sbin/
     sudo chmod +x /usr/local/sbin/menu
 

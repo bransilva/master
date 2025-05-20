@@ -11,6 +11,18 @@ The main interface of the application is designed to be easy to use and responsi
 Fitur backup data VPS memungkinkan Anda menyimpan konfigurasi penting dengan mudah dan aman, cukup satu klik!
 
 
+### BEFORE INSTALL
+➽ Debian 10 & 11 (recommended)   
+
+### INSTALASI :     
+
+1.  :    
+<pre><code>apt-get update && apt-get upgrade -y && apt dist-upgrade -y && update-grub</code></pre>
+
+2 :    
+<pre><code>apt install curl jq wget screen build-essential -y && reboot</code></pre>
+
+
 ### INSTALL SCRIPT 
 ```
 apt install -y && apt update -y && apt upgrade -y && wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/premi.sh && chmod +x premi.sh && ./premi.sh

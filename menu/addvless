@@ -32,21 +32,24 @@ ORANGE='\033[0;33m'
 LIGHT='\033[0;37m'
 grenbo="\e[92;1m"
 red() { echo -e "\\033[32;1m${*}\\033[0m"; }
-# Getting
+
+# Getting Telegram Bot Config
 CHATID=$(grep -E "^#bot# " "/etc/bot/.bot.db" | cut -d ' ' -f 3)
 KEY=$(grep -E "^#bot# " "/etc/bot/.bot.db" | cut -d ' ' -f 2)
 export TIME="10"
 export URL="https://api.telegram.org/bot$KEY/sendMessage"
+
 clear
-#IZIN SCRIPT
+# IZIN SCRIPT
 MYIP=$(curl -sS ipv4.icanhazip.com)
 echo -e "\e[32mloading...\e[0m"
 clear
+
 # Valid Script
 ipsaya=$(curl -sS ipv4.icanhazip.com)
 data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 date_list=$(date +"%Y-%m-%d" -d "$data_server")
-data_ip="https://raw.githubusercontent.com/bransilva/lucki756.v/refs/heads/main/permission"
+data_ip="https://raw.githubusercontent.com/tonnystoree/TONY/refs/heads/main/ijin"
 checking_sc() {
   useexp=$(wget -qO- $data_ip | grep $ipsaya | awk '{print $3}')
   if [[ $date_list < $useexp ]]; then
@@ -60,7 +63,7 @@ checking_sc() {
     echo -e "   \033[0;33mYour VPS${NC} $ipsaya \033[0;33mHas been Banned${NC}"
     echo -e "     \033[0;33mBuy access permissions for scripts${NC}"
     echo -e "             \033[0;33mContact Admin :${NC}"
-    echo -e "      ${GREEN}TELEGRAM${NC} SCRIPT BY LUCKI NS"
+    echo -e "      ${GREEN}TELEGRAM${NC} @Petarukan_Store"
     echo -e "\033[1;93m────────────────────────────────────────────\033[0m"
     exit 0
   fi
@@ -80,9 +83,9 @@ until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
 
   if [[ ${CLIENT_EXISTS} == '1' ]]; then
     clear
-  echo -e "\033[1;93m☉————————————————————————☉\033[0m"
-  echo -e " CREATE VLESS ACCOUNT           "
-  echo -e "\033[1;93m☉————————————————————————☉\033[0m"
+    echo -e "\033[1;93m☉————————————————————————☉\033[0m"
+    echo -e " CREATE VLESS ACCOUNT           "
+    echo -e "\033[1;93m☉————————————————————————☉\033[0m"
     echo ""
     echo "A client with the specified name was already created, please choose another name."
     echo ""
@@ -91,12 +94,14 @@ until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
     menu
   fi
 done
+
 ISP=$(cat /root/.info/.isp)
 CITY=$(cat /root/.info/.city)
 uuid=$(cat /proc/sys/kernel/random/uuid)
 read -p "Expired (days): " masaaktif
 read -p "Limit User (GB): " Quota
 read -p "Limit User (IP): " iplimit
+
 tgl=$(date -d "$masaaktif days" +"%d")
 bln=$(date -d "$masaaktif days" +"%b")
 thn=$(date -d "$masaaktif days" +"%Y")
@@ -106,43 +111,20 @@ bln2=$(date +"%b")
 thn2=$(date +"%Y")
 tnggl="$tgl2 $bln2, $thn2"
 exp=$(date -d "$masaaktif days" +"%Y-%m-%d")
+
+# Add user to config
 sed -i '/#vless$/a\#& '"$user $exp"'\
 },{"id": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
 sed -i '/#vlessgrpc$/a\#& '"$user $exp"'\
 },{"id": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
 
+# Create VLESS links
 vlesslink1="vless://${uuid}@${domain}:443?path=/vless&security=tls&encryption=none&type=ws#${user}"
 vlesslink2="vless://${uuid}@${domain}:80?path=/vless&encryption=none&type=ws#${user}"
 vlesslink3="vless://${uuid}@${domain}:443?mode=gun&security=tls&encryption=none&type=grpc&serviceName=vless-grpc&sni=${domain}#${user}"
-if [ ! -e /etc/vless ]; then
-  mkdir -p /etc/vless
-fi
 
-if [[ $iplimit -gt 0 ]]; then
-mkdir -p /etc/hokage/limit/vless/ip
-echo -e "$iplimit" > /etc/hokage/limit/vless/ip/$user
-else
-echo > /dev/null
-fi
-
-if [ -z ${Quota} ]; then
-  Quota="0"
-fi
-
-c=$(echo "${Quota}" | sed 's/[^0-9]*//g')
-d=$((${c} * 1024 * 1024 * 1024))
-
-if [[ ${c} != "0" ]]; then
-  echo "${d}" >/etc/vless/${user}
-fi
-DATADB=$(cat /etc/vless/.vless.db | grep "^###" | grep -w "${user}" | awk '{print $2}')
-if [[ "${DATADB}" != '' ]]; then
-  sed -i "/\b${user}\b/d" /etc/vless/.vless.db
-fi
-echo "### ${user} ${exp} ${uuid} ${Quota} ${iplimit}" >>/etc/vless/.vless.db
-clear
+# Create user info file
 cat >/var/www/html/vless-$user.txt <<-END
-
 ◇━━━━━━━━━━━━━━━━━◇
    Format For Clash
 ◇━━━━━━━━━━━━━━━━━◇
@@ -198,56 +180,129 @@ cat >/var/www/html/vless-$user.txt <<-END
     grpc-service-name: vless-grpc
 
 ◇━━━━━━━━━━━━━━━━━◇
-Link Akun Vless 
+Link Akun Vless
 ◇━━━━━━━━━━━━━━━━━◇
-Link TLS      : 
+Link TLS      :
 ${vlesslink1}
 ◇━━━━━━━━━━━━━━━━━◇
-Link none TLS : 
+Link none TLS :
 ${vlesslink2}
 ◇━━━━━━━━━━━━━━━━━◇
-Link GRPC     : 
+Link GRPC     :
 ${vlesslink3}
 ◇━━━━━━━━━━━━━━━━━◇
-
-
 END
 
+# Prepare Telegram Message
+TEXT="
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>🔰 VLESS ACCOUNT INFO 🔰</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>🔸 Remarks  : ${user}</code>
+<code>🔸 Domain   : ${domain}</code>
+<code>🔸 ISP      : ${ISP}</code>
+<code>🔸 City     : ${CITY}</code>
+<code>🔸 Quota    : ${Quota} GB</code>
+<code>🔸 IP Limit : ${iplimit}</code>
+<code>🔸 Port     : 443/80</code>
+<code>🔸 UUID     : ${uuid}</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>🔰 WS TLS Link 🔰</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>${vlesslink1}</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>🔰 WS Non-TLS Link 🔰</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>${vlesslink2}</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>🔰 gRPC Link 🔰</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>${vlesslink3}</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>🔰 OpenClash Format 🔰</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>https://${domain}:81/vless-$user.txt</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>🔰 Active Period 🔰</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+<code>🔸 Created  : $tnggl</code>
+<code>🔸 Expired  : $expe</code>
+<code>◇━━━━━━━━━━━━━━━━━◇</code>
+"
+
+# Encode message for URL
+TEXT_ENCODED=$(echo "$TEXT" | sed -e 's/&/%26/g' -e 's/=/%3D/g' -e 's/?/%3F/g')
+
+# Send to Telegram
+curl -s --max-time $TIME -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT_ENCODED&parse_mode=html" $URL >/dev/null
+
+# Setup quota and IP limit
+if [ ! -e /etc/vless ]; then
+  mkdir -p /etc/vless
+fi
+
+if [[ $iplimit -gt 0 ]]; then
+  mkdir -p /etc/hokage/limit/vless/ip
+  echo -e "$iplimit" > /etc/hokage/limit/vless/ip/$user
+fi
+
+if [ -z ${Quota} ]; then
+  Quota="0"
+fi
+
+c=$(echo "${Quota}" | sed 's/[^0-9]*//g')
+d=$((${c} * 1024 * 1024 * 1024))
+
+if [[ ${c} != "0" ]]; then
+  echo "${d}" >/etc/vless/${user}
+fi
+
+# Update user database
+DATADB=$(cat /etc/vless/.vless.db | grep "^###" | grep -w "${user}" | awk '{print $2}')
+if [[ "${DATADB}" != '' ]]; then
+  sed -i "/\b${user}\b/d" /etc/vless/.vless.db
+fi
+echo "### ${user} ${exp} ${uuid} ${Quota} ${iplimit}" >>/etc/vless/.vless.db
+
+# Restart services
 systemctl restart xray
 systemctl restart nginx
+
+# Display user info
 clear
 echo -e ""
 echo -e "\033[1;93m☉——————————————————————————☉\033[0m" | tee -a /etc/user-create/user.log
-echo -e "🧿Status Create VLESS Succes🧿           " | tee -a /etc/user-create/user.log
+echo -e "🧿 VLESS ACCOUNT CREATED 🧿" | tee -a /etc/user-create/user.log
 echo -e "\033[1;93m☉——————————————————————————☉\033[0m" | tee -a /etc/user-create/user.log
-echo -e "Remarks     : ${user}" | tee -a /etc/user-create/user.log
-echo -e "Domain      : ${domain}" | tee -a /etc/user-create/user.log
-echo -e "User Quota  : ${Quota} GB" | tee -a /etc/user-create/user.log
-echo -e "Limit Ip    : ${iplimit} IP" | tee -a /etc/user-create/user.log
-echo -e "ISP         : ${ISP}" | tee -a /etc/user-create/user.log
-echo -e "City        : ${CITY}" | tee -a /etc/user-create/user.log
-echo -e "port TLS    : 400-900" | tee -a /etc/user-create/user.log
-#echo -e "Port DNS    : 443" | tee -a /etc/user-create/user.log
-echo -e "Port NTLS   : 80, 8080, 8880, 2082" | tee -a /etc/user-create/user.log
-echo -e "User ID     : ${uuid}" | tee -a /etc/user-create/user.log
-#echo -e "Xray Dns.   : ${NS}" | tee -a /etc/user-create/user.log
-#echo -e "Pubkey.     : ${PUB}" | tee -a /etc/user-create/user.log
-echo -e "Encryption  : none" | tee -a /etc/user-create/user.log
-echo -e "Path TLS    : /vless/multi-path " | tee -a /etc/user-create/user.log
-echo -e "ServiceName : vless-grpc" | tee -a /etc/user-create/user.log
+echo -e "🔸 Remarks  : ${user}" | tee -a /etc/user-create/user.log
+echo -e "🔸 Domain   : ${domain}" | tee -a /etc/user-create/user.log
+echo -e "🔸 Quota    : ${Quota} GB" | tee -a /etc/user-create/user.log
+echo -e "🔸 IP Limit : ${iplimit} IP" | tee -a /etc/user-create/user.log
+echo -e "🔸 ISP      : ${ISP}" | tee -a /etc/user-create/user.log
+echo -e "🔸 City     : ${CITY}" | tee -a /etc/user-create/user.log
+echo -e "🔸 Port TLS : 443" | tee -a /etc/user-create/user.log
+echo -e "🔸 Port NTLS: 80" | tee -a /etc/user-create/user.log
+echo -e "🔸 UUID     : ${uuid}" | tee -a /etc/user-create/user.log
+echo -e "🔸 Path     : /vless" | tee -a /etc/user-create/user.log
+echo -e "🔸 Service  : vless-grpc" | tee -a /etc/user-create/user.log
 echo -e "\033[1;93m☉——————————————————————————☉\033[0m" | tee -a /etc/user-create/user.log
-echo -e "🧿Link TLS    : ${vlesslink1}" | tee -a /etc/user-create/user.log
+echo -e "🔰 WS TLS LINK:" | tee -a /etc/user-create/user.log
+echo -e "${vlesslink1}" | tee -a /etc/user-create/user.log
 echo -e "\033[1;93m☉——————————————————————————☉\033[0m" | tee -a /etc/user-create/user.log
-echo -e "🧿Link NTLS   : ${vlesslink2}" | tee -a /etc/user-create/user.log
+echo -e "🔰 WS NON-TLS LINK:" | tee -a /etc/user-create/user.log
+echo -e "${vlesslink2}" | tee -a /etc/user-create/user.log
 echo -e "\033[1;93m☉——————————————————————————☉\033[0m" | tee -a /etc/user-create/user.log
-echo -e "🧿Link GRPC   : ${vlesslink3}" | tee -a /etc/user-create/user.log
+echo -e "🔰 gRPC LINK:" | tee -a /etc/user-create/user.log
+echo -e "${vlesslink3}" | tee -a /etc/user-create/user.log
 echo -e "\033[1;93m☉——————————————————————————☉\033[0m" | tee -a /etc/user-create/user.log
-echo -e "Format OpenClash : https://${domain}:81/vless-$user.txt" | tee -a /etc/user-create/user.log
+echo -e "🔰 OpenClash Format:" | tee -a /etc/user-create/user.log
+echo -e "https://${domain}:81/vless-$user.txt" | tee -a /etc/user-create/user.log
 echo -e "\033[1;93m☉——————————————————————————☉\033[0m" | tee -a /etc/user-create/user.log
-echo -e "Aktif Selama     : $masaaktif Hari" | tee -a /etc/user-create/user.log
-echo -e "Dibuat Pada      : $tnggl" | tee -a /etc/user-create/user.log
-echo -e "Berakhir Pada    : $expe" | tee -a /etc/user-create/user.log
+echo -e "🔰 Active Period:" | tee -a /etc/user-create/user.log
+echo -e "🔸 Created  : $tnggl" | tee -a /etc/user-create/user.log
+echo -e "🔸 Expired  : $expe" | tee -a /etc/user-create/user.log
 echo -e "\033[1;93m☉——————————————————————————☉\033[0m" | tee -a /etc/user-create/user.log
-echo "" | tee -a /etc/user-create/user.log
-read -p "Enter Back To menu"
+echo -e "\033[0;34m☉ TERIMAKASIH SUDAH BERBELANJA DI PETARUKAN STORE☉\033[0m" | tee -a /etc/user-create/user.log
+
+read -p "Press any key to back to menu"
 menu

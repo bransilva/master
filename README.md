@@ -8,27 +8,24 @@ The main interface of the application is designed to be easy to use and responsi
 </p>
 ---
 
-### BEFORE INSTALL
+### 1.  :  BEFORE INSTALL
 ➽ Debian 10 & 11 (recommended)   
   
 
-1.  :    
+  
 <pre><code>apt-get update && apt-get upgrade -y && apt dist-upgrade -y && update-grub</code></pre>
 
-2 :    
+   
 <pre><code>apt install curl jq wget screen build-essential -y && reboot</code></pre>
 
 
-### UBUNTU & DEBIAN INSTALL SCRIPT 
+### 2 : UBUNTU & DEBIAN INSTALL SCRIPT 
 ```
 apt install -y && apt update -y && apt upgrade -y && wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/premi.sh && chmod +x premi.sh && ./premi.sh
 ```
 
-## UPDATE SCRIPT
-```
-wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/update.sh && chmod +x update.sh && ./update.sh
-```
-## FIX V2RAY ( VMESS-VLESS-TROJAN NOT CONNECT )
+
+## 3 : FIX V2RAY ( VMESS-VLESS-TROJAN NOT CONNECT )
 ### Downgrade v2ray 
 
 ### copy paste command in vps after reboot install
@@ -42,6 +39,11 @@ sudo chmod +x /usr/local/bin/xray
 /usr/local/bin/xray version
 sudo systemctl start xray
 sudo systemctl enable xray
+```
+
+## UPDATE SCRIPT
+```
+wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/update.sh && chmod +x update.sh && ./update.sh
 ```
 ### SUPPORT OS LINUX
 - UBUNTU 20.04.05

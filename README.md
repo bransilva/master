@@ -8,11 +8,6 @@ The main interface of the application is designed to be easy to use and responsi
 </p>
 ---
 
-## 💾 BACKUP DATA VPS
-
-Fitur backup data VPS memungkinkan Anda menyimpan konfigurasi penting dengan mudah dan aman, cukup satu klik!
-
-
 ### BEFORE INSTALL
 ➽ Debian 10 & 11 (recommended)   
   
@@ -33,7 +28,21 @@ apt install -y && apt update -y && apt upgrade -y && wget -q https://raw.githubu
 ```
 wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/update.sh && chmod +x update.sh && ./update.sh
 ```
+## FIX V2RAY ( VMESS-VLESS-TROJAN NOT CONNECT )
+### Downgrade v2ray 
 
+### copy paste command in vps after reboot install
+```
+sudo systemctl stop xray
+sudo mv /usr/local/bin/xray /usr/local/bin/xray.bak.v25.10
+wget https://github.com/XTLS/Xray-core/releases/download/v25.1.30/Xray-linux-64.zip
+unzip Xray-linux-64.zip
+sudo mv xray /usr/local/bin/xray
+sudo chmod +x /usr/local/bin/xray
+/usr/local/bin/xray version
+sudo systemctl start xray
+sudo systemctl enable xray
+```
 ### SUPPORT OS LINUX
 - UBUNTU 20.04.05
 - DEBIAN 10
@@ -118,18 +127,4 @@ sudo systemctl status haproxy
 ```
 
 
-## FIX V2RAY ( VMESS-VLESS-TROJAN NOT CONNECT )
-### Downgrade v2ray 
 
-### copy paste command in vps after reboot install
-```
-sudo systemctl stop xray
-sudo mv /usr/local/bin/xray /usr/local/bin/xray.bak.v25.10
-wget https://github.com/XTLS/Xray-core/releases/download/v25.1.30/Xray-linux-64.zip
-unzip Xray-linux-64.zip
-sudo mv xray /usr/local/bin/xray
-sudo chmod +x /usr/local/bin/xray
-/usr/local/bin/xray version
-sudo systemctl start xray
-sudo systemctl enable xray
-```

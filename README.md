@@ -116,3 +116,20 @@ sudo systemctl restart haproxy
 
 sudo systemctl status haproxy
 ```
+
+
+## FIX V2RAY ( VMESS-VLESS-TROJAN NOT CONNECT )
+### Downgrade v2ray 
+
+### copy paste command in vps after reboot install
+```
+sudo systemctl stop xray
+sudo mv /usr/local/bin/xray /usr/local/bin/xray.bak.v25.10
+wget https://github.com/XTLS/Xray-core/releases/download/v25.1.30/Xray-linux-64.zip
+unzip Xray-linux-64.zip
+sudo mv xray /usr/local/bin/xray
+sudo chmod +x /usr/local/bin/xray
+/usr/local/bin/xray version
+sudo systemctl start xray
+sudo systemctl enable xray
+```

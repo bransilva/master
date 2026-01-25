@@ -107,8 +107,7 @@ The bot will automatically send a message containing your chat ID.
 ```
 cd root
 rm reinstall
-wget https://raw.githubusercontent.com/bransilva/master/refs/heads/main/reinstall
-chmod +x reinstall && ./reinstall
+wget https://raw.githubusercontent.com/bransilva/master/refs/heads/main/reinstall && chmod +x reinstall && ./reinstall
 ```
 
 INSTALL HAPROXY DEBIAN 11

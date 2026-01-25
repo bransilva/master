@@ -105,7 +105,9 @@ The bot will automatically send a message containing your chat ID.
 #### REINSTALL VPS UBUNTU DEBIAN
 
 ```
-curl -O https://raw.githubusercontent.com/bransilva/master/refs/heads/main/reinstall.sh
+cd root
+rm reinstall.sh
+wget https://raw.githubusercontent.com/bransilva/master/refs/heads/main/reinstall.sh
 chmod +x reinstall.sh
 ./reinstall.sh
 ```

@@ -1,8 +1,8 @@
 #!/bin/bash
 # ==========================================
-#   ZIVPN ULTIMATE INSTALLER (REPAIRED & FIXED)
+#   ZIVPN ULTIMATE INSTALLER (AUTO-CLEAN)
 #   Fixed by: Assistant
-#   For Architecture: AMD64 / x86_64
+#   Architecture: AMD64 / x86_64
 # ==========================================
 
 # --- WARNA ---
@@ -14,79 +14,74 @@ NC='\033[0m'
 
 clear
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "        ZIVPN AUTO-INSTALLER (FULL FIX)        "
+echo -e "      ZIVPN AUTO-INSTALLER (CLEAN VERSION)      "
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
 # ==========================================
-#  1. PRE-INSTALL: CEK, UNMASK & HAPUS
+#  1. PRE-INSTALL: CEK & BERSIHKAN SYSTEM
 # ==========================================
-echo -e "\n${YELLOW}[1/8] Membersihkan Sistem...${NC}"
+echo -e "\n${YELLOW}[1/8] Membersihkan Instalasi Lama...${NC}"
 
-# Stop dan Disable service lama
+# Stop service & Unmask
 systemctl stop zivpn >/dev/null 2>&1
 systemctl disable zivpn >/dev/null 2>&1
-
-# PENTING: Buka kunci Masked service (Biang kerok error sebelumnya)
 systemctl unmask zivpn >/dev/null 2>&1
 systemctl unmask zivpn.service >/dev/null 2>&1
 
-# Hapus file sisa
+# Hapus file service & binary lama
 rm -f /etc/systemd/system/zivpn.service
 rm -rf /etc/zivpn
 rm -f /usr/local/sbin/zivpn-menu
 rm -f /usr/local/sbin/xp-zivpn
 
-# Bersihkan Cronjob Lama
+# Bersihkan Cronjob
 sed -i '/xp-zivpn/d' /var/spool/cron/crontabs/root
 sed -i '/limit-quota/d' /var/spool/cron/crontabs/root
 
 systemctl daemon-reload
-echo -e "   ✅ Sistem bersih & Unmasked."
+echo -e "   ✅ System Ready."
 
 # ==========================================
 #  2. INSTALL DEPENDENCIES
 # ==========================================
-echo -e "\n${GREEN}[2/8] Menginstall Paket Pendukung...${NC}"
+echo -e "\n${GREEN}[2/8] Menginstall Dependencies...${NC}"
 apt-get update -y >/dev/null 2>&1
 apt-get install -y wget curl jq net-tools cron bc chrony openssl iptables-persistent >/dev/null 2>&1
 
-# Fix waktu server
+# Fix Timezone & Chrony
 systemctl enable chrony >/dev/null 2>&1
 systemctl start chrony >/dev/null 2>&1
 
 # ==========================================
 #  3. DOWNLOAD BINARY & CONFIG
 # ==========================================
-echo -e "\n${GREEN}[3/8] Mengunduh Core ZiVPN...${NC}"
+echo -e "\n${GREEN}[3/8] Download Binary ZiVPN...${NC}"
 
 mkdir -p /etc/zivpn
 
-# Download Binary (Menggunakan versi yang stabil)
+# Download Binary
 wget -q -O /usr/local/bin/zivpn https://github.com/zahidbd2/udp-zivpn/releases/download/udp-zivpn_1.4.9/udp-zivpn-linux-amd64
 chmod +x /usr/local/bin/zivpn
 
-# Download Config Default
+# Download Config
 if [ ! -f "/etc/zivpn/config.json" ]; then
     wget -q -O /etc/zivpn/config.json https://raw.githubusercontent.com/zahidbd2/udp-zivpn/main/config.json
 fi
 
 # ==========================================
-#  4. GENERATE SSL CERTIFICATE (WAJIB ADA)
+#  4. GENERATE SSL CERTIFICATE
 # ==========================================
-echo -e "\n${GREEN}[4/8] Membuat Sertifikat SSL...${NC}"
-# Tanpa ini, service akan GAGAL START
+echo -e "\n${GREEN}[4/8] Generate SSL Certificate...${NC}"
 openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
     -subj "/C=ID/ST=JawaBarat/L=Bandung/O=LUCKI/OU=Store/CN=zivpn" \
     -keyout "/etc/zivpn/zivpn.key" -out "/etc/zivpn/zivpn.crt" >/dev/null 2>&1
-
-echo -e "   ✅ Sertifikat dibuat di /etc/zivpn/"
+echo -e "   ✅ SSL Created."
 
 # ==========================================
-#  5. BUAT SERVICE FILE (FIXED EXECSTART)
+#  5. MEMBUAT SERVICE SYSTEMD
 # ==========================================
-echo -e "\n${GREEN}[5/8] Membuat Service Systemd...${NC}"
+echo -e "\n${GREEN}[5/8] Membuat Service File...${NC}"
 
-# Kita tulis manual supaya perintahnya BENAR (pakai 'server -c')
 cat <<EOF > /etc/systemd/system/zivpn.service
 [Unit]
 Description=zivpn VPN Server
@@ -111,25 +106,22 @@ EOF
 systemctl daemon-reload
 
 # ==========================================
-#  6. OPTIMASI SYSTEM & FIREWALL
+#  6. SETUP FIREWALL (IPTABLES)
 # ==========================================
-echo -e "\n${GREEN}[6/8] Setup Firewall & Tuning...${NC}"
-
-# Tuning Kernel untuk UDP
+echo -e "\n${GREEN}[6/8] Setup Firewall (NAT)...${NC}"
 sysctl -w net.core.rmem_max=16777216 >/dev/null 2>&1
 sysctl -w net.core.wmem_max=16777216 >/dev/null 2>&1
 
-# Setup IPTABLES NAT (Supaya bisa connect internet)
+# Auto Detect Interface
 IFACE=$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1)
 iptables -t nat -A PREROUTING -i $IFACE -p udp --dport 6000:19999 -j DNAT --to-destination :5667
 netfilter-persistent save >/dev/null 2>&1
 
 # ==========================================
-#  7. SCRIPT AUTO-DELETE (XP)
+#  7. SETUP AUTO-XP (EXPIRY)
 # ==========================================
-echo -e "${GREEN}[7/8] Memasang Script Auto-Delete (XP)...${NC}"
+echo -e "${GREEN}[7/8] Setup Auto-XP Script...${NC}"
 
-# Buat database kosong jika belum ada
 if [ ! -f "/etc/zivpn/user-db.json" ]; then echo "{}" > /etc/zivpn/user-db.json; fi
 
 cat <<'EOF' > /usr/local/sbin/xp-zivpn
@@ -158,30 +150,27 @@ if [ "$RESTART_REQUIRED" = true ]; then systemctl restart "$SERVICE_NAME"; fi
 EOF
 chmod +x /usr/local/sbin/xp-zivpn
 
-# Pasang Cronjob
 echo "0 0 * * * /usr/local/sbin/xp-zivpn >> /var/log/xp-zivpn.log 2>&1" >> /var/spool/cron/crontabs/root
 service cron restart >/dev/null 2>&1
 
 # ==========================================
-#  8. FINALISASI & STARTING
+#  8. FINISH & CLEANUP
 # ==========================================
-echo -e "\n${GREEN}[8/8] Menjalankan Service...${NC}"
+echo -e "\n${GREEN}[8/8] Starting Service...${NC}"
 
 systemctl enable zivpn
 systemctl start zivpn
 
-# Ambil Port ZiVPN Terbaru
 PORT_ZIVPN=$(grep -o '"listen": *"[^"]*"' /etc/zivpn/config.json | cut -d'"' -f4 | sed 's/://g' | sed 's/0.0.0.0//g')
 [ -z "$PORT_ZIVPN" ] && PORT_ZIVPN="5667"
 
-# Fix Exclude Port di UDP Custom (jika ada)
+# Fix Conflict UDP Custom
 if [ -f "/etc/systemd/system/udp-custom.service" ]; then
     sed -i "s|server -exclude .*|server -exclude 22,53,68,$PORT_ZIVPN|g" /etc/systemd/system/udp-custom.service
     systemctl daemon-reload
     systemctl restart udp-custom
 fi
 
-# Cek Status
 STATUS=$(systemctl is-active zivpn)
 
 clear
@@ -192,10 +181,13 @@ if [[ "$STATUS" == "active" ]]; then
     echo -e " Status Service : ${GREEN}RUNNING (AMAN)${NC}"
 else
     echo -e " Status Service : ${RED}ERROR / STOPPED${NC}"
-    echo -e " Cek log dengan : journalctl -u zivpn -n 20"
+    echo -e " Cek log : journalctl -u zivpn -n 20"
 fi
 echo "============================================"
-echo " - Config Path  : /etc/zivpn/config.json"
-echo " - Binary Path  : /usr/local/bin/zivpn"
 echo " - Port ZiVPN   : $PORT_ZIVPN"
 echo "============================================"
+echo -e "⚠️  Script ini akan dihapus otomatis..."
+sleep 2
+
+# === HAPUS DIRI SENDIRI (AUTO-CLEAN) ===
+rm -f "$0"

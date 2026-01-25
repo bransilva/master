@@ -121,6 +121,11 @@ sudo systemctl restart haproxy
 
 sudo systemctl status haproxy
 ```
+The main interface of the application is designed to be easy to use and responsive, providing maximum user experience.
 
+<p align="center">
+  <img src="https://github.com/bransilva/master/blob/main/yeik.jpg?raw=true" alt="Tampilan Menu" width="600"/>
+</p>
+---
 
 

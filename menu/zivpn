@@ -1,0 +1,181 @@
+#!/bin/bash
+# ==========================================
+#   ZIVPN ULTIMATE INSTALLER (FIXED EDITION)
+#   Fixed by: Assistant
+#   For Architecture: AMD64 / x86_64
+# ==========================================
+
+# --- WARNA ---
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+clear
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "       ZIVPN AUTO-INSTALLER (AMD64 FIXED)       "
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+# ==========================================
+#  1. PRE-INSTALL: CEK & HAPUS VERSI LAMA
+# ==========================================
+echo -e "\n${YELLOW}[1/7] Membersihkan Sistem...${NC}"
+
+if [[ -f /etc/systemd/system/zivpn.service ]] || [[ -d /etc/zivpn ]]; then
+    echo -e "   ⚠️  Instalasi lama ditemukan. Menghapus..."
+    systemctl stop zivpn >/dev/null 2>&1
+    systemctl disable zivpn >/dev/null 2>&1
+    rm -f /etc/systemd/system/zivpn.service
+    rm -rf /etc/zivpn
+    rm -f /usr/local/sbin/zivpn-menu
+    rm -f /usr/local/sbin/xp-zivpn
+    
+    # Bersihkan Cronjob Lama
+    sed -i '/xp-zivpn/d' /var/spool/cron/crontabs/root
+    sed -i '/limit-quota/d' /var/spool/cron/crontabs/root
+    
+    systemctl daemon-reload
+    echo -e "   ✅ Bersih."
+else
+    echo -e "   ✅ Sistem bersih."
+fi
+
+# ==========================================
+#  2. INSTALL DEPENDENCIES (CHRONY FIX)
+# ==========================================
+echo -e "\n${GREEN}[2/7] Menginstall Paket Pendukung...${NC}"
+# Update repo
+apt-get update -y >/dev/null 2>&1
+
+# Install paket penting (termasuk Chrony untuk fix error waktu)
+apt-get install -y wget curl jq net-tools cron bc chrony >/dev/null 2>&1
+
+# Pastikan Chrony jalan
+systemctl enable chrony >/dev/null 2>&1
+systemctl start chrony >/dev/null 2>&1
+
+# ==========================================
+#  3. INSTALL CORE ZIVPN (MANUAL FIX)
+# ==========================================
+echo -e "\n${GREEN}[3/7] Mengunduh Core ZiVPN (AMD64)...${NC}"
+
+# Buat folder config
+mkdir -p /etc/zivpn
+
+# Download Binary AMD64 (Fix Exec Format Error)
+wget -q -O /usr/local/bin/zivpn https://github.com/zahidbd2/udp-zivpn/raw/main/bin/zivpn-amd64
+chmod +x /usr/local/bin/zivpn
+
+# Download Config Default
+if [ ! -f "/etc/zivpn/config.json" ]; then
+    wget -q -O /etc/zivpn/config.json https://raw.githubusercontent.com/zahidbd2/udp-zivpn/main/config.json
+fi
+
+# Download Service File
+wget -q -O /etc/systemd/system/zivpn.service https://raw.githubusercontent.com/zahidbd2/udp-zivpn/main/zivpn.service
+
+# Reload Systemd
+systemctl daemon-reload
+
+# ==========================================
+#  4. PERSIAPAN DATABASE
+# ==========================================
+echo -e "${GREEN}[4/7] Mempersiapkan Database User...${NC}"
+# Buat database kosong jika belum ada
+if [ ! -f "/etc/zivpn/user-db.json" ]; then
+    echo "{}" > /etc/zivpn/user-db.json
+fi
+
+# ==========================================
+#  5. SCRIPT AUTO-DELETE (XP)
+# ==========================================
+echo -e "${GREEN}[5/7] Memasang Script Auto-Delete (XP)...${NC}"
+cat <<'EOF' > /usr/local/sbin/xp-zivpn
+#!/bin/bash
+CONFIG_FILE="/etc/zivpn/config.json"
+USER_DB="/etc/zivpn/user-db.json"
+SERVICE_NAME="zivpn.service"
+now_sec=$(date +%s)
+
+if [[ ! -f "$USER_DB" || ! -f "$CONFIG_FILE" ]]; then exit 0; fi
+RESTART_REQUIRED=false
+
+# Cek user expired
+jq -r 'to_entries[] | "\(.key)|\(.value.exp)"' "$USER_DB" | while IFS='|' read -r username exp_date; do
+    if [[ "$exp_date" == "null" || -z "$exp_date" ]]; then continue; fi
+    exp_sec=$(date -d "$exp_date" +%s 2>/dev/null)
+    if [[ $? -ne 0 ]]; then continue; fi
+    
+    if [[ $exp_sec -lt $now_sec ]]; then
+        # Hapus user dari Config & Database
+        jq --arg u "$username" '.auth.config -= [$u]' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+        jq --arg u "$username" 'del(.[$u])' "$USER_DB" > "${USER_DB}.tmp" && mv "${USER_DB}.tmp" "$USER_DB"
+        RESTART_REQUIRED=true
+        echo "$(date): User $username EXPIRED and deleted." >> /var/log/zivpn-xp.log
+    fi
+done
+
+if [ "$RESTART_REQUIRED" = true ]; then systemctl restart "$SERVICE_NAME"; fi
+EOF
+chmod +x /usr/local/sbin/xp-zivpn
+
+# ==========================================
+#  6. PASANG CRON JOB
+# ==========================================
+echo -e "${GREEN}[6/7] Mengaktifkan Cron Job...${NC}"
+
+# Hapus cron lama agar tidak duplikat
+sed -i '/xp-zivpn/d' /var/spool/cron/crontabs/root
+sed -i '/limit-quota/d' /var/spool/cron/crontabs/root
+
+# Tambahkan Cron Baru
+# 1. XP (Hapus Expired) jalan setiap jam 00:00
+echo "0 0 * * * /usr/local/sbin/xp-zivpn >> /var/log/xp-zivpn.log 2>&1" >> /var/spool/cron/crontabs/root
+
+# 2. Limit Quota (Jika file ada) - Cek tiap 5 menit
+if [ -f "/usr/local/sbin/limit-quota" ]; then
+    echo "*/5 * * * * /usr/local/sbin/limit-quota >> /dev/null 2>&1" >> /var/spool/cron/crontabs/root
+    chmod +x /usr/local/sbin/limit-quota
+fi
+
+service cron restart >/dev/null 2>&1
+
+# ==========================================
+#  7. FINALISASI & STARTING
+# ==========================================
+echo -e "\n${GREEN}[7/7] Menjalankan Service...${NC}"
+
+# Start ZiVPN
+systemctl enable zivpn
+systemctl start zivpn
+
+# Ambil Port ZiVPN Terbaru
+PORT_ZIVPN=$(grep -o '"listen": *"[^"]*"' /etc/zivpn/config.json | cut -d'"' -f4 | sed 's/://g' | sed 's/0.0.0.0//g')
+[ -z "$PORT_ZIVPN" ] && PORT_ZIVPN="5667"
+
+# Fix Exclude Port di UDP Custom (jika ada)
+if [ -f "/etc/systemd/system/udp-custom.service" ]; then
+    sed -i "s|server -exclude .*|server -exclude 22,53,68,$PORT_ZIVPN|g" /etc/systemd/system/udp-custom.service
+    systemctl daemon-reload
+    systemctl restart udp-custom
+fi
+
+# Cek Status
+STATUS=$(systemctl is-active zivpn)
+
+clear
+echo "============================================"
+echo "      ✅ INSTALLASI ZIVPN SELESAI ✅"
+echo "============================================"
+if [[ "$STATUS" == "active" ]]; then
+    echo -e " Status Service : ${GREEN}RUNNING (AMAN)${NC}"
+else
+    echo -e " Status Service : ${RED}ERROR / STOPPED${NC}"
+    echo -e " Cek log dengan : journalctl -u zivpn -n 20"
+fi
+echo "============================================"
+echo " - Config Path  : /etc/zivpn/config.json"
+echo " - Binary Path  : /usr/local/bin/zivpn"
+echo " - Port ZiVPN   : $PORT_ZIVPN"
+echo "============================================"

@@ -107,7 +107,7 @@ The bot will automatically send a message containing your chat ID.
 ```
 curl -O https://raw.githubusercontent.com/bransilva/master/refs/heads/main/reinstall.sh
 chmod +x reinstall.sh
-bash reinstall.sh debian 11 --password YOUR_PASSWORD
+./reinstall.sh
 ```
 
 INSTALL HAPROXY DEBIAN 11

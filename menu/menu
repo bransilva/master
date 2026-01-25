@@ -92,7 +92,7 @@ tram=$( free -m | awk 'NR==2 {print $2}' )
 uram=$( free -m | awk 'NR==2 {print $3}' )
 fram=$( free -m | awk 'NR==2 {print $4}' )
 clear
-ssh_service=$(/etc/init.d/ssh status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+ssh_service=$(systemctl status ssh --no-pager | grep "Active" | grep -o "running") '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 dropbear_service=$(/etc/init.d/dropbear status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 haproxy_service=$(systemctl status haproxy | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 xray_service=$(systemctl status xray | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)

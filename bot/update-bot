@@ -1,0 +1,133 @@
+#!/bin/bash
+
+# ==================================================
+#           PERSIAPAN & DEPENDENSI
+# ==================================================
+
+# Pastikan tool dasar terinstall
+apt-get install ruby zip unzip wget -y > /dev/null 2>&1
+if ! command -v lolcat &> /dev/null; then
+    gem install lolcat &> /dev/null
+fi
+
+clear
+
+# ==================================================
+#           FUNGSI ANIMASI LOADING
+# ==================================================
+fun_bar() {
+    CMD="$1"
+    
+    # Menjalankan perintah update di background
+    (
+        [[ -e $HOME/fim ]] && rm $HOME/fim
+        $CMD >/dev/null 2>&1
+        touch $HOME/fim
+    ) >/dev/null 2>&1 &
+
+    # Memulai Animasi
+    tput civis # Sembunyikan kursor
+    echo -ne "  \033[0;33mSedang Memproses Update \033[1;37m- \033[0;33m["
+    
+    while true; do
+        for ((i = 0; i < 18; i++)); do
+            echo -ne "\033[0;32m#"
+            sleep 0.1s
+        done
+        
+        # Cek jika proses selesai
+        if [[ -e $HOME/fim ]]; then
+            rm $HOME/fim
+            break
+        fi
+        
+        # Reset baris loading jika belum selesai
+        echo -e "\033[0;33m]"
+        sleep 1s
+        tput cuu1
+        tput dl1
+        echo -ne "  \033[0;33mSedang Memproses Update \033[1;37m- \033[0;33m["
+    done
+    
+    # Tampilan Selesai
+    echo -e "\033[0;33m]\033[1;37m -\033[1;32m SUKSES !\033[1;37m"
+    tput cnorm # Tampilkan kursor kembali
+}
+
+# ==================================================
+#           FUNGSI UPDATE UTAMA
+# ==================================================
+res1() {
+    # Hentikan service dulu agar file tidak terkunci
+    systemctl stop kyt
+
+    # --- 1. UPDATE MODULES ---
+    rm -rf /usr/bin/kyt/modules
+    mkdir -p /usr/bin/kyt/modules
+    
+    # Download Modules (Menggunakan URL RAW yang benar)
+    wget -q -O modules.zip "https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/main/bot/modules.zip"
+    unzip -o modules.zip > /dev/null 2>&1
+    
+    # Cek apakah hasil unzip membuat folder 'modules' atau flat file
+    if [ -d "modules" ]; then
+        chmod +x modules/*
+        mv modules/* /usr/bin/kyt/modules/
+        rm -rf modules
+    else
+        # Jika zip tidak ada foldernya (flat), pindahkan file hasil unzip langsung
+        # (Opsional: sesuaikan jika struktur zip berbeda)
+        echo "Zip structure check..." 
+    fi
+    rm -f modules.zip
+    
+    # --- 2. UPDATE SHELL ---
+    rm -rf /usr/bin/kyt/shell
+    mkdir -p /usr/bin/kyt/shell
+    
+    # Download Shell
+    wget -q -O shell.zip "https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/main/bot/shell.zip"
+    unzip -o shell.zip > /dev/null 2>&1
+    
+    if [ -d "shell" ]; then
+        chmod +x shell/*
+        # PERBAIKAN DI SINI: Memindahkan 'shell', bukan 'modules' lagi
+        mv shell/* /usr/bin/kyt/shell/
+        rm -rf shell
+    fi
+    rm -f shell.zip
+    chmod +x -R /usr/bin/kyt/shell/
+    chmod +x -R /usr/bin/kyt/modules/
+    sed -i 's/\r$//' /usr/bin/kyt/shell/bot/bot-shadowsocks-detail
+    sed -i 's/\r$//' /usr/bin/kyt/shell/bot/bot-vless-detail
+    sed -i 's/\r$//' /usr/bin/kyt/shell/bot/bot-vmess-detail
+    sed -i 's/\r$//' /usr/bin/kyt/shell/bot/bot-trojan-detail
+    # --- 3. RESTART SERVICE ---
+    systemctl enable kyt
+    systemctl restart kyt
+    chmod +x -R /usr/bin/kyt/shell/
+    chmod +x -R /usr/bin/kyt/modules/
+}
+
+# ==================================================
+#           EKSEKUSI MENU
+# ==================================================
+
+# Hapus file update-bot lama agar bersih
+rm -rf update-bot
+
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | lolcat
+echo -e " \e[1;97;101m UPDATE BOT TELEGRAM  !              \e[0m"
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | lolcat
+echo -e ""
+echo -e "  \033[1;91m Update Script Service & Menu\033[1;37m"
+
+# Jalankan fungsi update dengan loading bar
+fun_bar 'res1'
+
+echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" | lolcat
+echo -e ""
+echo -e " \033[1;32m Update Selesai! Cek Bot /start.\033[0m"
+echo -e ""
+read -n 1 -s -r -p "Tekan [ Enter ] untuk kembali ke menu"
+menu

@@ -1,0 +1,130 @@
+#!/bin/bash
+# ======================================================
+#   HOKAGE LEGEND ZIVPN MANAGER (SAFE MODE - NO AUTO DELETE)
+# ======================================================
+
+y='\033[1;33m'; z='\033[96m'; NC='\033[0m'; GREEN='\033[0;32m'
+RED='\033[0;31m'; PURPLE='\033[1;35m'; BLINK='\033[5m'
+CONFIG_FILE="/etc/zivpn/config.json"
+USER_DB="/etc/zivpn/user-db.json"
+SERVICE_NAME="zivpn.service"
+BACKUP_DIR="/root/backup/zivpn"
+
+print_gradient() {
+    echo -e "$1" 
+}
+print_row() {
+    local label="$1"; local val_text="$2"
+    local val_clean=$(echo -e "$val_text" | sed "s/\x1b\[[0-9;]*m//g")
+    local len_val=${#val_clean}; local max_space=30
+    local pad_len=$(( max_space - len_val ))
+    if [[ $pad_len -lt 0 ]]; then pad_len=0; fi
+    local padding=""; for ((i=0; i<pad_len; i++)); do padding+=" "; done
+    echo -e " ${z}│${NC} ${y}$(printf "%-12s" "$label")${NC} : ${val_text}${padding}${z}│${NC}"
+}
+function restart_service() { systemctl restart "$SERVICE_NAME"; }
+function remove_user_data() {
+    local user=$1
+    jq --arg u "$user" '.auth.config -= [$u]' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+    jq --arg u "$user" 'del(.[$u])' "$USER_DB" > "${USER_DB}.tmp" && mv "${USER_DB}.tmp" "$USER_DB"
+    userdel -f "$user" &>/dev/null
+    rm -f /etc/kyt/limit/ssh/ip/$user
+}
+
+function list_users() {
+    clear
+    echo -e "\033[1;36m================================================\033[0m"
+    echo -e "           MONITOR USER (AMAN - NO DELETE)      "
+    echo -e "\033[1;36m================================================\033[0m"
+    users=($(jq -r '.auth.config[]' "$CONFIG_FILE"))
+    today_sec=$(date +%s); total_active=0
+    for user in "${users[@]}"; do
+        if [[ "$user" == "zi" || -z "$user" ]]; then continue; fi
+        ((total_active++))
+        exp=$(jq -r --arg u "$user" '.[$u].exp // "Unknown"' "$USER_DB")
+        quota=$(jq -r --arg u "$user" '.[$u].quota // "Unlimited"' "$USER_DB")
+        if [[ "$exp" != "Unknown" ]]; then
+            exp_sec=$(date -d "$exp" +%s 2>/dev/null)
+            d1=$(date -d "$exp" +%s); d2=$(date -d "$(date +%Y-%m-%d)" +%s)
+            sisa_hari=$(( (d1 - d2) / 86400 ))
+            if [[ "$sisa_hari" -lt 0 ]]; then
+                validity="${RED}EXPIRED (${sisa_hari} Hari)${NC}" # Cuma tampil merah
+            else
+                validity="${GREEN}${sisa_hari} Hari${NC}"
+            fi
+        else
+            validity="${GREEN}Unlimited${NC}"
+        fi
+        echo -e " ${z}╭──────────────────────────────────────────────╮${NC}"
+        print_row "User" "$user"
+        print_row "Expired" "$exp"
+        print_row "Sisa Waktu" "$validity"
+        echo -e " ${z}╰──────────────────────────────────────────────╯${NC}"
+    done
+    echo -e ""
+    read -n 1 -s -r -p "Press any key to back..."
+}
+
+# --- ADD USER ---
+function add_user() {
+    clear
+    echo -e "CREATE USER"; echo ""
+    read -p " Username    : " username
+    if grep -q "\"$username\"" "$CONFIG_FILE"; then echo "Exists!"; sleep 1; return; fi
+    read -p " Password    : " password
+    read -p " Expired (D) : " masa_aktif
+    [ -z "$password" ] && password="$username"; [ -z "$masa_aktif" ] && masa_aktif="30"
+    exp_date=$(date -d "+$masa_aktif days" +%Y-%m-%d)
+    useradd -e "$exp_date" -s /bin/false -M "$username"
+    echo -e "$password\n$password" | passwd "$username" &>/dev/null
+    jq --arg user "$username" '.auth.config += [$user]' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+    jq --arg u "$username" --arg e "$exp_date" \
+       '.[$u] = {exp: $e, quota: "Unlimited", ip: "Unlimited"}' "$USER_DB" > "${USER_DB}.tmp" && mv "${USER_DB}.tmp" "$USER_DB"
+    restart_service
+    echo -e "SUCCESS: $username created."
+    sleep 2
+}
+
+# --- SYNC ---
+function sync_ssh() {
+    clear; echo "Syncing..."; 
+    # Clean Ghost
+    users_zivpn=$(jq -r '.auth.config[]' "$CONFIG_FILE" | sed 's/ //g' | sort -u)
+    for u in $users_zivpn; do
+        if [[ "$u" == "zi" || -z "$u" ]]; then continue; fi
+        if ! id "$u" &>/dev/null; then
+            jq --arg u "$u" '.auth.config -= [$u]' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+            jq --arg u "$u" 'del(.[$u])' "$USER_DB" > "${USER_DB}.tmp" && mv "${USER_DB}.tmp" "$USER_DB"
+        fi
+    done
+    # Add System User
+    while IFS=: read -r username _ uid _ _ _ _; do
+        if [[ $uid -ge 1000 && "$username" != "nobody" ]]; then
+            if ! grep -q "\"$username\"" "$CONFIG_FILE"; then
+                jq --arg user "$username" '.auth.config += [$user]' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+                raw_exp=$(chage -l "$username" | grep "Account expires" | cut -d: -f2)
+                exp_iso=$(date -d "$raw_exp" +"%Y-%m-%d" 2>/dev/null || echo "2026-12-31")
+                jq --arg u "$username" --arg e "$exp_iso" \
+                   '.[$u] = {exp: $e, quota: "Unlimited", ip: "Unlimited"}' "$USER_DB" > "${USER_DB}.tmp" && mv "${USER_DB}.tmp" "$USER_DB"
+            fi
+        fi
+    done < /etc/passwd
+    jq '.auth.config |= unique' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+    restart_service; echo "Done."; sleep 2
+}
+
+# --- MENU ---
+while true; do
+    clear
+    echo -e " [1] Create User"
+    echo -e " [2] Monitor User (AMAN)"
+    echo -e " [3] Sync SSH"
+    echo -e " [0] Exit"
+    read -p " Select: " opt
+    case $opt in
+        1) add_user ;;
+        2) list_users ;;
+        3) sync_ssh ;;
+        0) break ;;
+    esac
+done

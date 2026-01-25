@@ -1,0 +1,131 @@
+#!/bin/bash
+
+# Warna
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+# Konfigurasi Target
+TARGET_VERSION="v25.1.30"
+TARGET_URL="https://github.com/XTLS/Xray-core/releases/download/${TARGET_VERSION}/Xray-linux-64.zip"
+XRAY_PATH="/usr/local/bin/xray"
+
+clear
+echo -e "${BLUE}=====================================================${NC}"
+echo -e "${BLUE}          SMART XRAY DOWNGRADER / CHECKER            ${NC}"
+echo -e "${BLUE}=====================================================${NC}"
+
+# 1. Cek Versi Saat Ini
+echo -e "${CYAN}[CHECKING] Memeriksa versi Xray saat ini...${NC}"
+
+if [ -f "$XRAY_PATH" ]; then
+    # Mengambil string versi menggunakan command xray version
+    CURRENT_VER_STR=$($XRAY_PATH version | head -n 1 | awk '{print $2}')
+    
+    if [ -z "$CURRENT_VER_STR" ]; then
+        CURRENT_VER_STR="Unknown"
+    fi
+else
+    CURRENT_VER_STR="Tidak Terinstall"
+fi
+
+# 2. Tampilkan Perbandingan
+echo -e ""
+echo -e "  🔹 Versi Terinstall Saat Ini : ${GREEN}${CURRENT_VER_STR}${NC}"
+echo -e "  🔸 Versi Target Downgrade    : ${YELLOW}${TARGET_VERSION}${NC}"
+echo -e ""
+
+if [ "$CURRENT_VER_STR" == "Tidak Terinstall" ]; then
+    echo -e "${RED}Peringatan: Xray belum terinstall. Script ini akan melakukan instalasi baru.${NC}"
+fi
+
+# 3. Konfirmasi User
+echo -e "${BLUE}=====================================================${NC}"
+read -p "Apakah Anda yakin ingin melakukan DOWNGRADE ke ${TARGET_VERSION}? (y/n): " choice
+
+case "$choice" in 
+  y|Y ) 
+    echo -e "\n${GREEN}Memulai proses downgrade...${NC}"
+    ;;
+  * ) 
+    echo -e "\n${RED}Proses dibatalkan oleh pengguna.${NC}"
+    exit 0 
+    ;;
+esac
+
+# 4. Stop Service
+echo -e "\n${YELLOW}[1/7] Menghentikan service Xray...${NC}"
+sudo systemctl stop xray
+
+# 5. Backup Cerdas (Sesuai Versi Lama)
+echo -e "\n${YELLOW}[2/7] Membackup binary lama...${NC}"
+if [ -f "$XRAY_PATH" ]; then
+    # Nama backup disesuaikan dengan versi yang dideteksi tadi
+    BACKUP_NAME="xray.bak.${CURRENT_VER_STR}"
+    sudo mv $XRAY_PATH /usr/local/bin/$BACKUP_NAME
+    echo -e "${GREEN}Backup berhasil disimpan sebagai: /usr/local/bin/${BACKUP_NAME}${NC}"
+else
+    echo -e "${RED}File binary tidak ditemukan, skip backup.${NC}"
+fi
+
+# 6. Download
+echo -e "\n${YELLOW}[3/7] Mendownload Xray ${TARGET_VERSION}...${NC}"
+mkdir -p /tmp/xray_downgrade
+cd /tmp/xray_downgrade
+
+wget -q --show-progress $TARGET_URL
+
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Gagal mendownload! Mengembalikan backup...${NC}"
+    if [ -f "/usr/local/bin/$BACKUP_NAME" ]; then
+        mv /usr/local/bin/$BACKUP_NAME $XRAY_PATH
+        sudo systemctl start xray
+    fi
+    rm -rf /tmp/xray_downgrade
+    exit 1
+fi
+
+# 7. Install
+echo -e "\n${YELLOW}[4/7] Memasang binary baru...${NC}"
+unzip -o Xray-linux-64.zip > /dev/null 2>&1
+sudo mv xray $XRAY_PATH
+sudo chmod +x $XRAY_PATH
+rm -rf /tmp/xray_downgrade
+
+# 8. Verifikasi
+echo -e "\n${YELLOW}[5/7] Verifikasi versi baru...${NC}"
+NEW_VER=$($XRAY_PATH version | head -n 1 | awk '{print $2}')
+echo -e "Versi sekarang: ${GREEN}$NEW_VER${NC}"
+
+# 9. Restart Service
+echo -e "\n${YELLOW}[6/7] Menjalankan service...${NC}"
+sudo systemctl start xray
+sudo systemctl enable xray
+
+# 10. Log & Auto Return Menu
+echo -e "\n${YELLOW}[7/7] Menampilkan Status & Log...${NC}"
+echo -e "${BLUE}=====================================================${NC}"
+
+# Menampilkan status (Active: running)
+sudo systemctl status xray --no-pager
+echo -e "${BLUE}-----------------------------------------------------${NC}"
+echo -e "${CYAN}20 Baris Log Terakhir:${NC}"
+# Menampilkan snapshot log terakhir (bukan realtime -f agar script bisa lanjut)
+sudo journalctl -u xray -n 20 --no-pager
+
+echo -e "${BLUE}=====================================================${NC}"
+echo -e "${GREEN}Proses Downgrade Selesai.${NC}"
+echo -e ""
+
+# Timer Mundur 15 Detik
+for (( i=15; i>=1; i-- )); do
+    echo -ne "${YELLOW}Kembali ke menu otomatis dalam $i detik...${NC}\r"
+    sleep 1
+done
+
+echo -e "\n${CYAN}Membuka menu...${NC}"
+# Perintah untuk kembali ke menu (pastikan command 'menu' ada di VPS Anda)
+menu

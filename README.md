@@ -27,12 +27,12 @@ apt install -y && apt update -y && apt upgrade -y && wget -q https://raw.githubu
 
 ## 3 : FIX V2RAY ( VMESS-VLESS-TROJAN NOT CONNECT )
 ### Downgrade v2ray
-[08] MENU UTILITY
-[14] DOWNGRADE X-RAY
+- [08] MENU UTILITY
+- [14] DOWNGRADE X-RAY
 
 ## 4 : INSTALL ZIVPN ( OPTIONAL )
-[08] MENU UTILITY
-[15] INSTALL ZIVPN 
+- [08] MENU UTILITY
+- [15] INSTALL ZIVPN 
 
 
 ## 5 : UPDATE SCRIPT

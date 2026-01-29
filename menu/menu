@@ -1,6 +1,6 @@
 #!/bin/bash
 # ======================================================
-#   HOKAGE LEGEND MAIN MENU (Optimized Gradient)
+#   LUCKI NS MAIN MENU (Optimized Gradient)
 # ======================================================
 
 # COLOR VALIDATION
@@ -151,7 +151,7 @@ a=" ${CYAN}ACCOUNT PREMIUM"
 # ==================================================
 echo -e " "
 print_gradient "╭══════════════════════════════════════════════════════════╮"
-print_gradient "│    WELCOME TO  HOKAGE LEGEND STORE AUTOSCRIPT PREMIUM    │"
+print_gradient "│    WELCOME TO  LUCKI NS STORE AUTOSCRIPT PREMIUM    │"
 print_gradient "╰══════════════════════════════════════════════════════════╯"
 echo -e " ${z}══════════════════════════════════════════════════════════${NC}"
 echo -e " ${z}$NC$r ⇲ $NC$y System OS ${NC}        $Blue=$NC $MODEL${NC}"
@@ -172,7 +172,7 @@ echo -e "                 ${CYAN}ACCOUNT VLESS/WS/GRPC${NC}  $y=$NC $vla$NC"
 echo -e "                 ${CYAN}ACCOUNT TROJAN/WS/GRPC${NC} $y=$NC $trb${NC}"
 echo -e "                 ${CYAN}ACCOUNT SHADOW/WS/GRPC${NC} $y=$NC $ssa${NC}"
 echo -e "           ${NC}└─────────────────────────────────────┘${NC}"
-echo -e "               ${KIRI} ${RED} HOKAGE LEGEND STORE TUNNELING  ${NC} ${KANAN}"
+echo -e "               ${KIRI} ${RED} LUCKI NS STORE TUNNELING  ${NC} ${KANAN}"
 echo -e " ${z}╭════════════════╮╭══════════════════╮╭════════════════════╮${NC}"
 echo -e " ${z}│${NC}$y SSH$NC     : $status_ssh" "  $y NGINX$NC      : $status_nginx" "    $y XRAY$NC    : $status_xray  $NC${z}│$NC" 
 echo -e " ${z}│${NC}$y WS-ePRO$NC : $ssh_ws_status"  " $y  DROPBEAR$NC   : $status_dropbear" "    $y HAPROXY$NC : $status_haproxy  $NC${z}│$NC" 
@@ -188,13 +188,13 @@ echo -e "             ${z}$NC [${r}05${NC}]$green MENU SSWS$NC       ${z}│$NC 
 echo -e "    ${z}══════════════════════════════════════════════════════${NC}"
 echo -e "             ${KIRI}${z} INFORMATION YOUR ACTIVE PERIOD ${z}${KANAN}"
 echo -e " ${z}╭══════════════════════════════════════════════════════════╮${NC}"
-echo -e " ${z}    $NC${z} Developer$NC  ${z} =$NC HOKAGE LEGEND STORE"
+echo -e " ${z}    $NC${z} Developer$NC  ${z} =$NC LUCKI NS STORE"
 echo -e " ${z}    $NC${z} Telegram$NC   ${z} =$NC https://t.me/hokagelegend1"
 echo -e " ${z}    $NC${z} IP ADDRESS ${z} =$NC $IPVPS${NC}"
 echo -e " ${z}    $NC${z} User$NC       ${z} =$NC $username"
 echo -e " ${z}    $NC${z} Exp Script$NC ${z} =$NC $exp $certifacate Days$NC $sts"
 echo -e " ${z}╰══════════════════════════════════════════════════════════╯${NC}"
-echo -e "         ${KIRI}\033[5m\033[35mTHANKS YOU FOR \033[34mUSING SCRIPT \033[31mHOKAGE LEGEND\033[0m${KANAN}"
+echo -e "         ${KIRI}\033[5m\033[35mTHANKS YOU FOR \033[34mUSING SCRIPT \033[31mLUCKI NS\033[0m${KANAN}"
 echo -e ""
 read -p " PILIH MENU DENGAN CARA KETIK 1/10 : " opt
 echo -e ""

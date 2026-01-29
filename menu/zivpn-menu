@@ -1,6 +1,6 @@
 #!/bin/bash
 # ======================================================
-#   HOKAGE LEGEND ZIVPN MANAGER (SAFE MODE - NO AUTO DELETE)
+#   LUCKI NS ZIVPN MANAGER (SAFE MODE - NO AUTO DELETE)
 # ======================================================
 
 y='\033[1;33m'; z='\033[96m'; NC='\033[0m'; GREEN='\033[0;32m'

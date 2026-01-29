@@ -20,7 +20,7 @@ print_main_menu() {
   clear
   echo -e "${YELLOW}###########################################${NC}"
   echo -e "${YELLOW}#####${CYAN}       Easy Rebuild VPS v7.0     ${YELLOW}#####${NC}"
-  echo -e "${YELLOW}#####${WHITE}        HOKAGE LEGEND           ${YELLOW}#####${NC}"
+  echo -e "${YELLOW}#####${WHITE}        LUCKI NS           ${YELLOW}#####${NC}"
   echo -e "${YELLOW}###########################################${NC}"
   echo -e ""
   echo -e "${RED}Pilih opsi dibawah :${NC}"

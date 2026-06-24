@@ -15,14 +15,14 @@ apt install python3 python3-pip git -y
 apt-get remove speedtest-cli -y > /dev/null 2>&1
 
 cd /usr/bin
-wget https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/bot/bot.zip
+wget https://raw.githubusercontent.com/bransilva/lucki756.v/refs/heads/main/bot/bot.zip
 unzip bot.zip
 mv bot/* /usr/bin
 chmod +x /usr/bin/*
 rm -rf bot.zip
 clear
 
-wget https://raw.githubusercontent.com/hokagelegend9999/alpha.v2/refs/heads/main/bot/kyt.zip
+wget https://raw.githubusercontent.com/bransilva/lucki756.v/refs/heads/main/bot/kyt.zip
 unzip kyt.zip
 
 # --- UPDATE PENTING DISINI ---
